@@ -57,7 +57,7 @@ const httpTrigger = async function (
       data: body,
       headers: {
         "Content-Type": req.headers.get("content-type") || "application/json",
-        "User-Agent": "Labrador-MixpanelProxy/1.0"
+        "User-Agent": "Labrador-MPProxy/1.0"
       },
       validateStatus: () => true // Accept any status code
     });
@@ -89,7 +89,7 @@ const httpTrigger = async function (
 app.http("MixpanelProxy", {
   methods: ["GET", "POST", "OPTIONS"],
   authLevel: "anonymous",
-  route: "mp/{*path}",
+  route: "mpproxy/{*path}",
   handler: httpTrigger
 });
 
