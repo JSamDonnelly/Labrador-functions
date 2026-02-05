@@ -86,7 +86,7 @@ const httpTrigger = async function (
   }
 };
 
-app.http("MixpanelProxy", {
+app.http("MPProxy", {
   methods: ["GET", "POST", "OPTIONS"],
   authLevel: "anonymous",
   route: "mpproxy/{*path}",
