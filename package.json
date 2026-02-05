@@ -1,0 +1,20 @@
+{
+  "name": "labrador-functions",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "func start",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.11.0",
+    "axios": "^1.4.0",
+    "prettier": "^3.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "typescript": "^5.0.0"
+  }
+}

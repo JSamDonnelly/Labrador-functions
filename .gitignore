@@ -1,0 +1,60 @@
+# Azure Functions
+bin
+obj
+appsettings.json
+local.settings.json
+__blobstorage__
+__queuestorage__
+__azurite_db*__.json
+.python_packages
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+dist/
+*.js
+*.js.map
+!host.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Azure
+.funcignore
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output
+
+# Test
+.jest/
