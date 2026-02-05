@@ -1,6 +1,10 @@
 # Labrador-functions
 
-Azure Functions TypeScript project with the following functions:
+Azure Functions v4 TypeScript project with the following functions:
+
+## Project Structure
+
+This project uses the Azure Functions v4 programming model with all functions located in `src/functions/`. No `function.json` files are needed - functions are registered using the `@azure/functions` app instance.
 
 ## Functions
 
@@ -16,7 +20,7 @@ Timer-triggered function that imports LinkedIn ad details into Mixpanel once per
 ### MixpanelProxy
 HTTP-triggered proxy function that forwards requests to the Mixpanel API with CORS support for testwithlabrador.com domains.
 
-**Route**: `/api/mp/{*path}` (forwards to `https://api.mixpanel.com/{path}`)  
+**Route**: `/api/mpproxy/{*path}` (forwards to `https://api.mixpanel.com/{path}`)  
 **Methods**: GET, POST, OPTIONS  
 **Auth Level**: Anonymous
 
@@ -33,6 +37,7 @@ func start
 ```
 
 ## Notes
-- The LinkedIn API request in `ImportLinkedInToMixpanel/index.ts` is a minimal example. Adjust query params and fields to match the LinkedIn Marketing API endpoints you need.
+- The LinkedIn API request in `src/functions/ImportLinkedInToMixpanel.ts` is a minimal example. Adjust query params and fields to match the LinkedIn Marketing API endpoints you need.
 - The ImportLinkedInToMixpanel function maps LinkedIn ad objects to Mixpanel events and posts them to `https://api.mixpanel.com/track` using the project token. If you prefer the Import API or a different format, adapt the payload accordingly.
-- The MixpanelProxy function allows only requests from `testwithlabrador.com` domains. Update the `ALLOWED_ORIGINS` array in `MixpanelProxy/index.ts` to add or modify allowed domains.
+- The MixpanelProxy function allows only requests from `testwithlabrador.com` domains. Update the `ALLOWED_ORIGINS` array in `src/functions/MixpanelProxy.ts` to add or modify allowed domains.
+- This project uses Azure Functions v4 programming model - all functions are in `src/functions/` and are registered using the `app` instance from `@azure/functions`.

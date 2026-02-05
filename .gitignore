@@ -8,6 +8,11 @@ __queuestorage__
 __azurite_db*__.json
 .python_packages
 
+# Legacy function folders (v4 uses src/functions)
+ImportLinkedInToMixpanel/
+MixpanelProxy/
+MPProxy/
+
 # Node.js
 node_modules/
 npm-debug.log*

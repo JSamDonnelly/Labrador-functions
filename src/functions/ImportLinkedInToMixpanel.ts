@@ -1,3 +1,4 @@
+import { app, InvocationContext, Timer } from "@azure/functions";
 import axios from "axios";
 
 const linkedinApiUrl = process.env.LINKEDIN_API_URL || "https://api.linkedin.com/v2/adAnalyticsV2";
@@ -5,11 +6,14 @@ const accessToken = process.env.LINKEDIN_ACCESS_TOKEN;
 const accountId = process.env.LINKEDIN_ACCOUNT_ID;
 const mixpanelToken = process.env.MIXPANEL_TOKEN;
 
-const timerTrigger = async function (context: any, myTimer: any): Promise<void> {
+export async function ImportLinkedInToMixpanel(
+  myTimer: Timer,
+  context: InvocationContext
+): Promise<void> {
   context.log('ImportLinkedInToMixpanel started at', new Date().toISOString());
 
   if (!accessToken || !accountId || !mixpanelToken) {
-    context.log.error("Missing required environment variables. Set LINKEDIN_ACCESS_TOKEN, LINKEDIN_ACCOUNT_ID, and MIXPANEL_TOKEN.");
+    context.error("Missing required environment variables. Set LINKEDIN_ACCESS_TOKEN, LINKEDIN_ACCOUNT_ID, and MIXPANEL_TOKEN.");
     return;
   }
 
@@ -48,8 +52,11 @@ const timerTrigger = async function (context: any, myTimer: any): Promise<void> 
 
     context.log('Sent', events.length, 'events to Mixpanel. Response:', mixpanelRes.status, mixpanelRes.data);
   } catch (err: any) {
-    context.log.error('Error importing LinkedIn data:', err?.response?.data || err.message || err);
+    context.error('Error importing LinkedIn data:', err?.response?.data || err.message || err);
   }
-};
+}
 
-export default timerTrigger;
+app.timer("ImportLinkedInToMixpanel", {
+  schedule: "0 0 7 * * *", // Daily at 7:00 AM
+  handler: ImportLinkedInToMixpanel
+});
