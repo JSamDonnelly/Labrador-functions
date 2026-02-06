@@ -57,7 +57,8 @@ export async function MixpanelProxy(
       data: body,
       headers: {
         "Content-Type": req.headers.get("content-type") || "application/json",
-        "User-Agent": "Labrador-MixpanelProxy/1.0"
+        "Accept": req.headers.get("accept") || "application/json",
+        "X-Forwarded-For": req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "",
       },
       validateStatus: () => true // Accept any status code
     });
