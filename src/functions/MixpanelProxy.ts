@@ -74,7 +74,7 @@ export async function MixpanelProxy(
 
   } catch (error: any) {
     context.error("Error proxying request to Mixpanel:", error.message);
-    
+
     return {
       status: 500,
       headers: corsHeaders,
@@ -89,6 +89,6 @@ export async function MixpanelProxy(
 app.http("MixpanelProxy", {
   methods: ["GET", "POST", "OPTIONS"],
   authLevel: "anonymous",
-  route: "mp/{*path}",
+  route: "mpproxy/{*path}",
   handler: MixpanelProxy
 });
