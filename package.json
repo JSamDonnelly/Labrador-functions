@@ -5,9 +5,11 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "prestart": "npm run clean && npm run build",
     "start": "func start",
     "prepare": "npm run build"
   },
+  "main": "dist/src/{index.js,functions/*.js}",
   "dependencies": {
     "@azure/functions": "^4.11.0",
     "axios": "^1.4.0",
