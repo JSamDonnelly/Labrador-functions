@@ -15,6 +15,8 @@ export async function MixpanelProxy(
 ): Promise<HttpResponseInit> {
   const origin = req.headers.get("origin") || req.headers.get("Origin");
   
+  context.log(`Request from origin: ${origin}, method: ${req.method}`);
+  
   // Set CORS headers
   const corsHeaders: Record<string, string> = {
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -22,13 +24,19 @@ export async function MixpanelProxy(
     "Access-Control-Max-Age": "86400"
   };
 
-  // Check if origin is allowed
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+  // Check if origin is allowed (case-insensitive)
+  const isOriginAllowed = origin && ALLOWED_ORIGINS.some(
+    allowedOrigin => allowedOrigin.toLowerCase() === origin.toLowerCase()
+  );
+
+  if (isOriginAllowed) {
     corsHeaders["Access-Control-Allow-Origin"] = origin;
     corsHeaders["Access-Control-Allow-Credentials"] = "true";
+    context.log(`Origin allowed: ${origin}`);
   } else if (origin) {
     // Log rejected origins to help debug
     context.warn(`Origin not in allowlist: ${origin}`);
+    context.warn(`Allowed origins: ${ALLOWED_ORIGINS.join(", ")}`);
   }
 
   // Handle preflight OPTIONS request
