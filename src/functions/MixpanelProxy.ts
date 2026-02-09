@@ -4,7 +4,9 @@ import axios from "axios";
 const MIXPANEL_API_BASE = "https://api.mixpanel.com";
 const ALLOWED_ORIGINS = [
   "https://testwithlabrador.com",
-  "https://www.testwithlabrador.com"
+  "https://www.testwithlabrador.com",
+  "http://localhost:5173", // Vite dev server
+  "http://localhost:3000"  // Alternative dev port
 ];
 
 export async function MixpanelProxy(
