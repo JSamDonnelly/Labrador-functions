@@ -41,7 +41,7 @@ Thumbs.db
 *~
 
 # IDE
-.vscode/
+
 .idea/
 *.suo
 *.ntvs*
