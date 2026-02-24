@@ -54,12 +54,26 @@ export async function MixpanelProxy(
 
     context.log(`Proxying ${req.method} request to: ${targetUrl}`);
 
-    // Get request body
-    let body;
+    // Get request body as raw buffer to preserve binary/octet-stream data
+    let body: Buffer | undefined;
     try {
-      body = await req.text();
+      const arrayBuffer = await req.arrayBuffer();
+      body = arrayBuffer.byteLength > 0 ? Buffer.from(arrayBuffer) : undefined;
     } catch {
       body = undefined;
+    }
+
+    // Forward all request headers, only injecting X-Forwarded-For for location info
+    const forwardHeaders: Record<string, string> = {};
+    const hopByHopHeaders = new Set(["host", "connection", "transfer-encoding", "upgrade", "keep-alive", "proxy-authenticate", "proxy-authorization", "te", "trailers"]);
+    req.headers.forEach((value, key) => {
+      if (!hopByHopHeaders.has(key.toLowerCase())) {
+        forwardHeaders[key] = value;
+      }
+    });
+    const clientIp = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "";
+    if (clientIp) {
+      forwardHeaders["X-Forwarded-For"] = clientIp;
     }
 
     // Forward the request to Mixpanel
@@ -68,22 +82,19 @@ export async function MixpanelProxy(
       url: targetUrl,
       params: Object.fromEntries(req.query.entries()),
       data: body,
-      headers: {
-        "Content-Type": req.headers.get("content-type") || "application/json",
-        "Accept": req.headers.get("accept") || "application/json",
-        "X-Forwarded-For": req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "",
-      },
+      headers: forwardHeaders,
+      responseType: "arraybuffer",
       validateStatus: () => true // Accept any status code
     });
 
-    // Return the response from Mixpanel
+    // Return the raw response buffer from Mixpanel
     return {
       status: response.status,
       headers: {
         ...corsHeaders,
-        "Content-Type": response.headers["content-type"] || "application/json"
+        "Content-Type": response.headers["content-type"] || "application/octet-stream"
       },
-      body: JSON.stringify(response.data)
+      body: Buffer.from(response.data)
     };
 
   } catch (error: any) {
